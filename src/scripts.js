@@ -5,6 +5,11 @@ import ingredientData from './data/ingredient-data';
 
 import './css/base.scss';
 import './css/styles.scss';
+import './images/apple-logo.png'
+import './images/apple-logo-outline.png'
+import './images/cookbook.png'
+import './images/seasoning.png'
+import './images/search.png'
 
 import User from './user';
 import Recipe from './recipe';
