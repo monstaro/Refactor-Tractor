@@ -126,6 +126,11 @@ span {
   padding: 1%;
 }
 
+.faved-recipes-btn {
+  color: white;
+}
+ 
+
 .nav-btn {
   align-items: center;
   background: #5B7894 no-repeat;
@@ -152,8 +157,8 @@ span {
 }
 
 .nav-btn img {
-  max-height: 40px;
-  max-width: 40px;
+  height: 40px;
+  width: 40px;
   padding: 2px 0px;
 }
 
@@ -264,9 +269,17 @@ main {
   transition: .8s ease;
 }
 
-.card-apple-icon {
+.unfilled-heart {
   cursor: pointer;
   float: right;
+  height: 50px;
+  padding-bottom: 10px;
+  width: 45px;
+}
+
+.unfilled-to-cook {
+  cursor: pointer;
+  float: left;
   height: 50px;
   padding-bottom: 10px;
   width: 45px;
