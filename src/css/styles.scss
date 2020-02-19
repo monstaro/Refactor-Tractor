@@ -30,7 +30,6 @@ h2 {
 
 h3 {
   color: #359567;
-  cursor: pointer;
   height: 17%;
   margin: 5px 5px 10px 0px;
   transition: .8s ease;
@@ -43,6 +42,20 @@ h4 {
   margin: 10px 0px 0px 0px;
   padding: 1px 4px 1px 4px;
   width: max-content;
+}
+
+label {
+  cursor: pointer;
+}
+
+// input[type="checkbox"] {
+//   display: none;
+// }
+
+input[type="checkbox"]:checked + label {
+  background: #9dff90;
+  border-radius: 25px;
+  padding: 0 5px;
 }
 
 
@@ -245,7 +258,6 @@ main {
   background-color: white;
   border: 2px solid #C4EB67;
   border-radius: 7px;
-  cursor: pointer;
   height: 270px;
   margin: 20px;
   padding: 15px;
@@ -271,7 +283,6 @@ main {
 
 .unfilled-heart {
   cursor: pointer;
-  float: right;
   height: 50px;
   padding-bottom: 10px;
   width: 45px;
@@ -279,7 +290,6 @@ main {
 
 .unfilled-to-cook {
   cursor: pointer;
-  float: left;
   height: 50px;
   padding-bottom: 10px;
   width: 45px;
@@ -290,18 +300,22 @@ main {
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 7px;
-  cursor: pointer;
   height: 130px;
   transition: .8s ease;
   width: 100%;
 }
 
 .card-photo-container {
+  cursor: pointer;
   align-items: center;
   display: flex;
   height: 130px;
   justify-content: center;
   position: relative;
+}
+  
+.card-photo-container * {
+  pointer-events: none;
 }
 
 .text {
@@ -345,6 +359,16 @@ main {
 
 .filter-btn:hover {
   background-color: #84C8A4;
+}
+
+.recipe-card button {
+  background: none;
+  border: none;
+}
+
+.recipe-card-buttons {
+  display:flex;
+  justify-content: space-between;
 }
 
 

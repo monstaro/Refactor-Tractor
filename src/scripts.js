@@ -13,7 +13,8 @@ import './images/cookbook.png'
 import './images/seasoning.png'
 import './images/search.png'
 import './images/chef.svg'
-import './images/chef-green.svg'
+import './images/chef-filled.svg'
+
 
 
 
@@ -23,6 +24,7 @@ const onLoadHelper = () => {
   createCards()
   findTags()
   generateUser()
+  console.log(recipeData, ingredientsData)
 }
 
 let users = fetch(urls[0])
@@ -35,9 +37,7 @@ let recipeData = fetch(urls[2])
   .then(response => response.json())
   .catch(err => err.message)
 
-
-
-Promise.all([users, ingredientsData, recipeData])
+  Promise.all([users, ingredientsData, recipeData])
   .then(data => {
     users = data[0].wcUsersData
     ingredientsData = data[1].ingredientsData
@@ -45,7 +45,7 @@ Promise.all([users, ingredientsData, recipeData])
   })
   .then(onLoadHelper)
   .catch(err => err.message)
-
+  
 
 import User from './user';
 import Recipe from './recipe';
@@ -126,8 +126,14 @@ function addToDom(recipeInfo, shortRecipeName) {
         </div>
       </div>
       <h4>${recipeInfo.tags[0]}</h4>
-      <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
-      <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
+      <div class="recipe-card-buttons"> 
+        <button>
+          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
+        </button>
+        <button>
+          <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
+        </button>
+      </div>
     </div>`
   main.insertAdjacentHTML("beforeend", cardHtml);
 }
@@ -211,8 +217,8 @@ function checkIcon (e) {
   if (e.target.className === 'unfilled-heart') {
     addToMyFavorites()
   }
-  if (e.target.className === 'card-photo-preview') {
-    console.log(event)
+  if (e.target.className === 'card-photo-container') {
+
     openRecipeInfo(event)
   }
 }
@@ -233,7 +239,7 @@ function addToMyFavorites() {
 function addToRecipesToCook() {
   let cardId = parseInt(event.target.closest(".recipe-card").id)
   if (!user.recipesToCook.includes(cardId)) {
-    event.target.src = "./images/chef-green.svg";
+    event.target.src = "./images/chef-filled.svg";
     user.decideToCook(cardId);
   } else {
     event.target.src = "./images/chef.svg";
