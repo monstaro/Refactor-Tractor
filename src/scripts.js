@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import users from './data/users-data';
-import recipeData from  './data/recipe-data';
-import ingredientData from './data/ingredient-data';
+// import users from './data/users-data';
+// import recipeData from  './data/recipe-data';
+// import ingredientData from './data/ingredient-data';
 
 import './css/base.scss';
 import './css/styles.scss';
@@ -10,6 +10,36 @@ import './images/apple-logo-outline.png'
 import './images/cookbook.png'
 import './images/seasoning.png'
 import './images/search.png'
+
+let urls = ['https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData', 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/recipes/recipeData']
+
+const onLoadHelper = () => {
+    createCards()
+    findTags()
+    generateUser()
+}
+
+let users = fetch(urls[0])
+  .then(response => response.json())
+  .catch(err => err.message)
+let ingredientsData = fetch(urls[1])
+  .then(response => response.json())
+  .catch(err => err.message)
+let recipeData = fetch(urls[2])
+  .then(response => response.json())
+  .catch(err => err.message)
+
+
+
+Promise.all([users, ingredientsData, recipeData])
+  .then(data => {
+    users = data[0].wcUsersData
+    ingredientsData = data[1].ingredientsData
+    recipeData = data[2].recipeData
+  })
+  .then(onLoadHelper)
+  .catch(err => err.message)
+
 
 import User from './user';
 import Recipe from './recipe';
@@ -31,9 +61,9 @@ let tagList = document.querySelector(".tag-list");
 let user;
 
 
-window.addEventListener("load", createCards);
-window.addEventListener("load", findTags);
-window.addEventListener("load", generateUser);
+// window.addEventListener("load", createCards);
+// window.addEventListener("load", findTags);
+// window.addEventListener("load", generateUser);
 allRecipesBtn.addEventListener("click", showAllRecipes);
 filterBtn.addEventListener("click", findCheckedBoxes);
 main.addEventListener("click", addToMyRecipes);
@@ -200,6 +230,7 @@ function openRecipeInfo(event) {
   let recipeId = event.path.find(e => e.id).id;
   let recipe = recipeData.find(recipe => recipe.id === Number(recipeId));
   generateRecipeTitle(recipe, generateIngredients(recipe));
+  console.log(generateIngredients(recipe));
   addRecipeImage(recipe);
   generateInstructions(recipe);
   fullRecipeInfo.insertAdjacentHTML("beforebegin", "<section id='overlay'></div>");
@@ -219,8 +250,9 @@ function addRecipeImage(recipe) {
 }
 
 function generateIngredients(recipe) {
-  return recipe && recipe.ingredients.map(i => {
-    return `${capitalize(i.name)} (${i.quantity.amount} ${i.quantity.unit})`
+  return recipe.ingredients.map(i => {
+    let ingredient = ingredientsData.find(item => item.id === i.id)
+    return `${capitalize(ingredient.name)} (${i.quantity.amount} ${i.quantity.unit})`
   }).join(", ");
 }
 
