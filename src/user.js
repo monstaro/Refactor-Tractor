@@ -18,9 +18,16 @@ class User {
   decideToCook(recipe) {
     this.recipesToCook.push(recipe);
   }
+
+  decideNotToCook(recipe) {
+    let i = this.recipesToCook.indexOf(recipe);
+    this.recipesToCook.splice(i, 1);
+  }
+
   filterRecipes(type) {
     return this.favoriteRecipes.filter(recipe => recipe.type.includes(type));
   }
+
   searchForRecipe(keyword) {
     return this.favoriteRecipes.filter(recipe => recipe.name.includes(keyword) || recipe.ingredients.includes(keyword));
   }
