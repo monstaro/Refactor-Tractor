@@ -7,16 +7,24 @@ import './css/base.scss';
 import './css/styles.scss';
 import './images/apple-logo.png'
 import './images/apple-logo-outline.png'
+import './images/heart.svg'
+import './images/heart-full.svg'
 import './images/cookbook.png'
 import './images/seasoning.png'
 import './images/search.png'
+import './images/chef.svg'
+import './images/chef-filled.svg'
+
+
+
 
 let urls = ['https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData', 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/recipes/recipeData']
 
 const onLoadHelper = () => {
-    createCards()
-    findTags()
-    generateUser()
+  createCards()
+  findTags()
+  generateUser()
+  console.log(recipeData, ingredientsData)
 }
 
 let users = fetch(urls[0])
@@ -29,9 +37,7 @@ let recipeData = fetch(urls[2])
   .then(response => response.json())
   .catch(err => err.message)
 
-
-
-Promise.all([users, ingredientsData, recipeData])
+  Promise.all([users, ingredientsData, recipeData])
   .then(data => {
     users = data[0].wcUsersData
     ingredientsData = data[1].ingredientsData
@@ -39,7 +45,7 @@ Promise.all([users, ingredientsData, recipeData])
   })
   .then(onLoadHelper)
   .catch(err => err.message)
-
+  
 
 import User from './user';
 import Recipe from './recipe';
@@ -52,7 +58,8 @@ let menuOpen = false;
 let pantryBtn = document.querySelector(".my-pantry-btn");
 let pantryInfo = [];
 let recipes = [];
-let savedRecipesBtn = document.querySelector(".saved-recipes-btn");
+let favedRecipesBtn = document.querySelector(".faved-recipes-btn");
+let recipesToCookBtn = $('.recipes-to-cook-btn')
 let searchBtn = document.querySelector(".search-btn");
 let searchForm = document.querySelector("#search");
 let searchInput = document.querySelector("#search-input");
@@ -61,17 +68,26 @@ let tagList = document.querySelector(".tag-list");
 let user;
 
 
+
+
+
+
+
 // window.addEventListener("load", createCards);
 // window.addEventListener("load", findTags);
 // window.addEventListener("load", generateUser);
 allRecipesBtn.addEventListener("click", showAllRecipes);
 filterBtn.addEventListener("click", findCheckedBoxes);
-main.addEventListener("click", addToMyRecipes);
+main.addEventListener("click", checkIcon);
 pantryBtn.addEventListener("click", toggleMenu);
-savedRecipesBtn.addEventListener("click", showSavedRecipes);
+favedRecipesBtn.addEventListener("click", showFavedRecipes);
+recipesToCookBtn.on('click', showRecipesToCook)
 searchBtn.addEventListener("click", searchRecipes);
 showPantryRecipes.addEventListener("click", findCheckedPantryBoxes);
 searchForm.addEventListener("submit", pressEnterSearch);
+
+
+
 
 // GENERATE A USER ON LOAD
 function generateUser() {
@@ -110,7 +126,14 @@ function addToDom(recipeInfo, shortRecipeName) {
         </div>
       </div>
       <h4>${recipeInfo.tags[0]}</h4>
-      <img src="../images/apple-logo-outline.png" alt="unfilled apple icon" class="card-apple-icon">
+      <div class="recipe-card-buttons"> 
+        <button>
+          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
+        </button>
+        <button>
+          <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
+        </button>
+      </div>
     </div>`
   main.insertAdjacentHTML("beforeend", cardHtml);
 }
@@ -185,35 +208,47 @@ function hideUnselectedRecipes(foundRecipes) {
 }
 
 // FAVORITE RECIPE FUNCTIONALITY
-function addToMyRecipes() {
-  if (event.target.className === "card-apple-icon") {
-    let cardId = parseInt(event.target.closest(".recipe-card").id)
-    if (!user.favoriteRecipes.includes(cardId)) {
-      event.target.src = "../images/apple-logo.png";
-      user.saveRecipe(cardId);
-    } else {
-      event.target.src = "../images/apple-logo-outline.png";
-      user.removeRecipe(cardId);
-    }
-  } else if (event.target.id === "exit-recipe-btn") {
-    exitRecipe();
-  } else if (isDescendant(event.target.closest(".recipe-card"), event.target)) {
-    openRecipeInfo(event);
+
+function checkIcon (e) {
+  console.log(e)
+  if (e.target.className === 'unfilled-to-cook') {
+    addToRecipesToCook()
+  }
+  if (e.target.className === 'unfilled-heart') {
+    addToMyFavorites()
+  }
+  if (e.target.className === 'card-photo-container') {
+
+    openRecipeInfo(event)
   }
 }
 
-function isDescendant(parent, child) {
-  let node = child;
-  while (node !== null) {
-    if (node === parent) {
-      return true;
-    }
-    node = node.parentNode;
+
+function addToMyFavorites() {
+  let cardId = parseInt(event.target.closest(".recipe-card").id)
+  if (!user.favoriteRecipes.includes(cardId)) {
+    event.target.src = "./images/heart-full.svg";
+    user.saveRecipe(cardId);
+  } else {
+    event.target.src = "./images/heart.svg";
+    user.removeRecipe(cardId);
   }
-  return false;
 }
 
-function showSavedRecipes() {
+
+function addToRecipesToCook() {
+  let cardId = parseInt(event.target.closest(".recipe-card").id)
+  if (!user.recipesToCook.includes(cardId)) {
+    event.target.src = "./images/chef-filled.svg";
+    user.decideToCook(cardId);
+  } else {
+    event.target.src = "./images/chef.svg";
+    user.decideNotToCook(cardId);
+  }
+}
+
+
+function showFavedRecipes() {
   let unsavedRecipes = recipes.filter(recipe => {
     return !user.favoriteRecipes.includes(recipe.id);
   });
@@ -224,16 +259,29 @@ function showSavedRecipes() {
   showMyRecipesBanner();
 }
 
+
+function showRecipesToCook() {
+  let unsavedRecipes = recipes.filter(recipe => {
+    return !user.recipesToCook.includes(recipe.id);
+  });
+  unsavedRecipes.forEach(recipe => {
+    let domRecipe = document.getElementById(`${recipe.id}`);
+    domRecipe.style.display = "none";
+  });
+  // showMyRecipesBanner();
+}
+
 // CREATE RECIPE INSTRUCTIONS
 function openRecipeInfo(event) {
   fullRecipeInfo.style.display = "inline";
   let recipeId = event.path.find(e => e.id).id;
   let recipe = recipeData.find(recipe => recipe.id === Number(recipeId));
   generateRecipeTitle(recipe, generateIngredients(recipe));
-  console.log(generateIngredients(recipe));
+  // console.log(generateIngredients(recipe));
   addRecipeImage(recipe);
   generateInstructions(recipe);
   fullRecipeInfo.insertAdjacentHTML("beforebegin", "<section id='overlay'></div>");
+  document.querySelector('#exit-recipe-btn').addEventListener('click', exitRecipe)
 }
 
 function generateRecipeTitle(recipe, ingredients) {
@@ -250,6 +298,7 @@ function addRecipeImage(recipe) {
 }
 
 function generateIngredients(recipe) {
+  console.log(recipe)
   return recipe.ingredients.map(i => {
     let ingredient = ingredientsData.find(item => item.id === i.id)
     return `${capitalize(ingredient.name)} (${i.quantity.amount} ${i.quantity.unit})`
