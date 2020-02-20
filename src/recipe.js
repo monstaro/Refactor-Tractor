@@ -5,6 +5,7 @@ class Recipe {
     this.image = recipe.image;
     this.tags = recipe.tags;
     this.ingredients = recipe.ingredients;
+    this.instructions = recipe.instructions;
   }
   identifyIngredients(ingredients) {
     this.ingredients = this.ingredients.map(ingredient => {
@@ -16,13 +17,12 @@ class Recipe {
     })
   }
   calculateIngredientsCost() {
-    
+    return this.ingredients.reduce((cost, curCost) => {
+      return cost + curCost.estimatedCostInCents
+    }, 0)
   }
   listIngredients() {
-
-  }
-  getInstructions() {
-    
+    return this.ingredients.map(ingredient => ingredient.name)
   }
 }
 
