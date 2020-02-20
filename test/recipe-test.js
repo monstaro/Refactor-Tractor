@@ -1,14 +1,16 @@
 import { expect } from 'chai';
 
-import Recipe from '../src/recipe';
-import data from '../data/recipe-data';
+import Recipe from '../src/recipe.js';
+import data from '../src/data/recipe-data.js';
+import ingredientsData from '../src/data/ingredient-data.js'
 
 describe('Recipe', function() {
   let recipe;
   let recipeInfo;
 
+
   beforeEach(function() {
-    recipeInfo = data.recipeData[0];
+    recipeInfo = data[0];
     recipe = new Recipe(recipeInfo);
   })
 
@@ -43,8 +45,37 @@ describe('Recipe', function() {
     }
     expect(recipe.ingredients[0]).to.deep.eq(ingredient);
   });
-
+  it('should be able to find the ingredients data needed', () => {
+    expect(recipe.ingredients.length).to.equal(11)
+    recipe.identifyIngredients(ingredientsData)
+    expect(recipe.ingredients[0]).to.deep.equal({
+      id: 20081,
+      name: 'wheat flour',
+      estimatedCostInCents: 142,
+      quantity: { amount: 1.5, unit: 'c' }
+    })
+    expect(recipe.ingredients.length).to.equal(11)
+  })
   it('should calculate the total cost of all of the ingredients', function() {
-    expect(recipe.calculateIngredientsCost()).to.eq();
+    recipe.identifyIngredients(ingredientsData)
+    expect(recipe.calculateIngredientsCost()).to.eq(5921);
   });
+  it('should have a list of all of the ingredients', () => {
+    expect(recipe.listIngredients()).to.deep.equal([
+      "all purpose flour",
+      "baking soda",
+      "egg",
+      "granulated sugar",
+      "instant vanilla pudding mix",
+      "light brown sugar",
+      "salt",
+      "sea salt",
+      "semisweet chocolate chips",
+      "unsalted butter",
+      "vanilla extract",
+    ])
+  })
+  it('should return a set of instructions', () => {
+    expect(recipe.instructions).to.deep.equal(data[0])
+  })
 });
