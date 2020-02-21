@@ -76,6 +76,6 @@ describe('Recipe', function() {
     ])
   })
   it('should return a set of instructions', () => {
-    expect(recipe.instructions).to.deep.equal(data[0])
+    expect(recipe.instructions).to.deep.equal(data[0].instructions)
   })
 });
