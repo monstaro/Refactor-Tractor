@@ -27,7 +27,15 @@ describe('Cookbook', function () {
   });
 
   it('should be able to filter recipes by ingredient', function(){
-    expect(cookbook.filterRecipes('apple')).to.deep.equal([cookbook.recipes[1], cookbook.recipes[4], cookbook.recipes[8], cookbook.recipes[12], cookbook.recipes[27], cookbook.recipes[48]]);
+    expect(cookbook.filterRecipes('apple')).to.deep.equal([
+      cookbook.recipes[1],
+      cookbook.recipes[4],
+      cookbook.recipes[8],
+      cookbook.recipes[12],
+      cookbook.recipes[27],
+      cookbook.recipes[48]
+    ]);
+    console.log(cookbook.recipes[8].ingredients);
   });
 
 });
