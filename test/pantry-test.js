@@ -38,4 +38,7 @@ describe('Pantry', function() {
     expect(pantry.comparePantryToRecipe(recipeInfo)).to.equal(false)
     expect(pantry.comparePantryToRecipe(sampleRecipe)).to.equal(true)
   })
+  it('should tell the amount of ingredients still needed to cook a meal', () => {
+    expect(pantry.determineIngredientQuantityNeeded(sampleRecipe)).to.equal("You have 16 c of all purpose flour, you need 500 c to make this reicpe.")
+  })
 });
