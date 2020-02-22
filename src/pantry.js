@@ -84,6 +84,8 @@ class Pantry {
       })
       if (requiredAmount > pantryAmount) {
         return amount;
+      } else {
+        return 'You have enough materials to make this recipe!'
       }
     }
   }
