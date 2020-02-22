@@ -3,6 +3,8 @@ import $ from 'jquery';
 // import recipeData from  './data/recipe-data';
 // import ingredientData from './data/ingredient-data';
 
+import User from './user';
+import Recipe from './recipe';
 import './css/base.scss';
 import './css/styles.scss';
 import './images/apple-logo.png'
@@ -24,7 +26,7 @@ const onLoadHelper = () => {
   createCards()
   findTags()
   generateUser()
-  console.log(recipeData, ingredientsData)
+  console.log(recipeData, ingredientsData, users)
 }
 
 let users = fetch(urls[0])
@@ -37,7 +39,7 @@ let recipeData = fetch(urls[2])
   .then(response => response.json())
   .catch(err => err.message)
 
-  Promise.all([users, ingredientsData, recipeData])
+Promise.all([users, ingredientsData, recipeData])
   .then(data => {
     users = data[0].wcUsersData
     ingredientsData = data[1].ingredientsData
@@ -47,8 +49,6 @@ let recipeData = fetch(urls[2])
   .catch(err => err.message)
   
 
-import User from './user';
-import Recipe from './recipe';
 
 let allRecipesBtn = document.querySelector(".show-all-btn");
 let filterBtn = document.querySelector(".filter-btn");
@@ -70,12 +70,6 @@ let user;
 
 
 
-
-
-
-// window.addEventListener("load", createCards);
-// window.addEventListener("load", findTags);
-// window.addEventListener("load", generateUser);
 allRecipesBtn.addEventListener("click", showAllRecipes);
 filterBtn.addEventListener("click", findCheckedBoxes);
 main.addEventListener("click", checkIcon);
