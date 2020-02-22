@@ -40,12 +40,10 @@ describe('Pantry', function() {
   })
   it('should tell the amount of ingredients still needed to cook a meal', () => {
 
-    userInfo = userData[0];
-    user = new User(userInfo);
-    pantry = new Pantry(userInfo);
-    recipeInfo = new Recipe(recipeData[0]);
-    sampleRecipe = new Recipe(sampleRecipeData[1])
+ 
 
     expect(pantry.determineIngredientQuantityNeeded(sampleRecipe)).to.equal("You have 16 c of all purpose flour, you need 5000 c to make this reicpe.")
+
+    expect(pantry.determineIngredientQuantityNeeded(recipeInfo)).to.equal('You have enough materials to make this recipe!')
   })
 });
