@@ -111,6 +111,7 @@ function createCards() {
 }
 
 function addToDom(recipeInfo, shortRecipeName) {
+  let tag = (recipeInfo.tags[0]) ?  recipeInfo.tags[0] : 'No Tags';
   let cardHtml = `
     <div class="recipe-card" id=${recipeInfo.id}>
       <h3 maxlength="40">${shortRecipeName}</h3>
@@ -120,13 +121,13 @@ function addToDom(recipeInfo, shortRecipeName) {
           <div>Click for Instructions</div>
         </div>
       </div>
-      <h4>${recipeInfo.tags[0]}</h4>
+      <h4>${tag}</h4>
       <div class="recipe-card-buttons">
         <button>
-          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
+          <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
         </button>
         <button>
-          <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
+          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
         </button>
       </div>
     </div>`
