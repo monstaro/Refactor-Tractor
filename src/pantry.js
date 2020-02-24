@@ -6,6 +6,7 @@
 class Pantry {
   constructor(userInfo) {
     this.pantry = userInfo.pantry
+    this.missingIngredients = []
   }
   
   comparePantryToRecipe(recipe) {
@@ -14,8 +15,33 @@ class Pantry {
       return allIngredients
     }, []);
 
+    let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
+      this.pantry.forEach(item => {
+        if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
+          ingredientsList.push(ingredient.name)
+        }
+      })
+      return ingredientsList
+    }, [])
 
-  
+
+    if (recipeIngredients.length === matchingIngredients.length) {
+      return true
+    } else {
+      return false;
+    }
+
+   
+  }
+
+  findIngredientsNeeded(recipe) {
+    let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
+      allIngredients.push(ingredient.name)
+      return allIngredients
+    }, []);
+
+
+    
 
     let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
       this.pantry.forEach(item => {
@@ -28,66 +54,65 @@ class Pantry {
 
 
 
-    // let findDiff = recipeIngredients.filter(ing => !matchingIngredients.includes(ing))
+    return recipeIngredients.filter(ing => !matchingIngredients.includes(ing))
 
-    if (recipeIngredients.length === matchingIngredients.length) {
-      return true
-    } else {
-      return false;
-    }
   }
 
 
   
   determineIngredientQuantityNeeded(recipe) {
-
-    // if (!this.matchingIngredients) {
-    //   let pantryAmount = 0
-    //   let unit;
-    //   let amount;
-    //   let ingredientName;
-    //   let requiredAmount;
-    //   recipe.ingredients.forEach(ingredient => {
-    //     this.pantry.forEach(item => {
-    //       if (ingredient.id === item.ingredient) {
-    //         pantryAmount += item.amount;
-    //         unit = ingredient.quantity.unit;
-    //         requiredAmount = ingredient.quantity.amount
-    //         ingredientName = ingredient.name;
-    //         amount = `You have ${pantryAmount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
-    //       }
-    //     })
-    //   })
-    //   return amount;
-    // }
-
-
-    if (!this.matchingIngredients) {
-      let pantryAmount = 0
-      let unit;
-      let amount;
-      let ingredientName;
-      let requiredAmount;
-
-
-
-      recipe.ingredients.forEach(ingredient => {
-        this.pantry.forEach(item => {
-          if (ingredient.id === item.ingredient) {
-            pantryAmount += item.amount;
-            unit = ingredient.quantity.unit;
-            requiredAmount = ingredient.quantity.amount
-            ingredientName = ingredient.name;
-            amount = `You have ${pantryAmount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
-          }
-        })
+    recipe.ingredients.forEach(ingredient => {
+      let currentIngredient = this.pantry.find(item => {
+        return item.ingredient === ingredient.id
       })
-      if (requiredAmount > pantryAmount) {
-        return amount;
+      let requiredAmount;
+      if (currentIngredient) {
+        requiredAmount = ingredient.quantity.amount - currentIngredient.amount 
       } else {
-        return 'You have enough materials to make this recipe!'
+        requiredAmount = ingredient.quantity.amount 
       }
-    }
+      if (requiredAmount > 0) {
+        this.missingIngredients
+          .push({name: ingredient.name, 
+            missingAmount: requiredAmount,
+            id: ingredient.id,
+            unit: ingredient.quantity.unit})
+      }
+    })
+  }
+  determineCostOfMissingIngredients(ingredients, recipe) {
+    // create array of needed ingredients
+    let needed = []
+    
+    let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
+      allIngredients.push(ingredient.id)
+      return allIngredients
+    }, []);
+
+    let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
+      this.pantry.forEach(item => {
+        if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
+          ingredientsList.push(ingredient.id)
+        }
+      })
+      return ingredientsList
+    }, [])
+
+
+
+
+    //  let findDiff = recipeIngredients.filter(ing => !matchingIngredients.includes(ing)) 
+    
+    let neededIngredients = recipe.ingredients.filter(ing => !matchingIngredients.includes(ing.id))
+
+    let a = neededIngredients.map(ingr => {
+      ingredients.forEach(ingredient => {
+        if (ingr.id === ingredient.id) {
+          return ingr.cost = ingredient.estimatedCostInCents * ingr.quantity.amount
+        }
+      })
+    })
+    console.log(a)
   }
 }
 
