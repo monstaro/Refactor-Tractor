@@ -10,53 +10,44 @@ class Pantry {
   }
   
   comparePantryToRecipe(recipe) {
-    let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
-      allIngredients.push(ingredient.name)
-      return allIngredients
-    }, []);
-
-    let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
-      this.pantry.forEach(item => {
-        if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
-          ingredientsList.push(ingredient.name)
-        }
-      })
-      return ingredientsList
-    }, [])
-
-
-    if (recipeIngredients.length === matchingIngredients.length) {
-      return true
-    } else {
-      return false;
-    }
-
-   
+    // let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
+    //   allIngredients.push(ingredient.name)
+    //   return allIngredients
+    // }, []);
+    // let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
+    //   this.pantry.forEach(item => {
+    //     if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
+    //       ingredientsList.push(ingredient.name)
+    //     }
+    //   })
+    //   return ingredientsList
+    // }, [])
+    // if (recipeIngredients.length === matchingIngredients.length) {
+    //   return true
+    // } else {
+    //   return false;
+    // }   
+    this.determineIngredientQuantityNeeded(recipe)
+    return this.missingIngredients.length === 0;
   }
 
-  findIngredientsNeeded(recipe) {
-    let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
-      allIngredients.push(ingredient.name)
-      return allIngredients
-    }, []);
+  // findIngredientsNeeded(recipe) {
+  //   let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
+  //     allIngredients.push(ingredient.name)
+  //     return allIngredients
+  //   }, []);
 
 
-    
-
-    let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
-      this.pantry.forEach(item => {
-        if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
-          ingredientsList.push(ingredient.name)
-        }
-      })
-      return ingredientsList
-    }, [])
-
-
-
-    return recipeIngredients.filter(ing => !matchingIngredients.includes(ing))
-
-  }
+  //   let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
+  //     this.pantry.forEach(item => {
+  //       if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
+  //         ingredientsList.push(ingredient.name)
+  //       }
+  //     })
+  //     return ingredientsList
+  //   }, [])
+  //   return recipeIngredients.filter(ing => !matchingIngredients.includes(ing))
+  // }
 
 
   
@@ -76,14 +67,16 @@ class Pantry {
           .push({name: ingredient.name, 
             missingAmount: requiredAmount,
             id: ingredient.id,
-            unit: ingredient.quantity.unit})
+            unit: ingredient.quantity.unit,
+            cost: ingredient.estimatedCostInCents
+          })
       }
+
     })
   }
+
   determineCostOfMissingIngredients(ingredients, recipe) {
-    // create array of needed ingredients
-    let needed = []
-    
+
     let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
       allIngredients.push(ingredient.id)
       return allIngredients
@@ -112,7 +105,7 @@ class Pantry {
         }
       })
     })
-    console.log(a)
+
   }
 }
 
