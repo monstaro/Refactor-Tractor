@@ -111,7 +111,7 @@ function createCards() {
 }
 
 function addToDom(recipeInfo, shortRecipeName) {
-  let tag = (recipeInfo.tags[0]) ?  recipeInfo.tags[0] : 'No Tags';
+  let tag = (recipeInfo.tags[0]) ? recipeInfo.tags[0] : 'No Tags';
   let cardHtml = `
     <div class="recipe-card" id=${recipeInfo.id}>
       <h3 maxlength="40">${shortRecipeName}</h3>
