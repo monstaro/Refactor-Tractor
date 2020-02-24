@@ -1,8 +1,4 @@
 import $ from 'jquery';
-// import users from './data/users-data';
-// import recipeData from  './data/recipe-data';
-// import ingredientData from './data/ingredient-data';
-
 import './css/base.scss';
 import './css/styles.scss';
 import './images/apple-logo.png'
@@ -24,7 +20,6 @@ const onLoadHelper = () => {
   createCards()
   findTags()
   generateUser()
-  console.log(recipeData, ingredientsData)
 }
 
 let users = fetch(urls[0])
@@ -37,7 +32,7 @@ let recipeData = fetch(urls[2])
   .then(response => response.json())
   .catch(err => err.message)
 
-  Promise.all([users, ingredientsData, recipeData])
+Promise.all([users, ingredientsData, recipeData])
   .then(data => {
     users = data[0].wcUsersData
     ingredientsData = data[1].ingredientsData
@@ -45,7 +40,7 @@ let recipeData = fetch(urls[2])
   })
   .then(onLoadHelper)
   .catch(err => err.message)
-  
+
 
 import User from './user';
 import Recipe from './recipe';
@@ -116,6 +111,7 @@ function createCards() {
 }
 
 function addToDom(recipeInfo, shortRecipeName) {
+  let tag = (recipeInfo.tags[0]) ?  recipeInfo.tags[0] : 'No Tags';
   let cardHtml = `
     <div class="recipe-card" id=${recipeInfo.id}>
       <h3 maxlength="40">${shortRecipeName}</h3>
@@ -125,13 +121,13 @@ function addToDom(recipeInfo, shortRecipeName) {
           <div>Click for Instructions</div>
         </div>
       </div>
-      <h4>${recipeInfo.tags[0]}</h4>
-      <div class="recipe-card-buttons"> 
-        <button>
-          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
-        </button>
+      <h4>${tag}</h4>
+      <div class="recipe-card-buttons">
         <button>
           <img src="./images/chef.svg" alt="unfilled to-cook icon" class="unfilled-to-cook" />
+        </button>
+        <button>
+          <img src="./images/heart.svg" alt="unfilled favorite icon" class="unfilled-heart" />
         </button>
       </div>
     </div>`
@@ -209,8 +205,7 @@ function hideUnselectedRecipes(foundRecipes) {
 
 // FAVORITE RECIPE FUNCTIONALITY
 
-function checkIcon (e) {
-  console.log(e)
+function checkIcon(e) {
   if (e.target.className === 'unfilled-to-cook') {
     addToRecipesToCook()
   }
@@ -277,7 +272,6 @@ function openRecipeInfo(event) {
   let recipeId = event.path.find(e => e.id).id;
   let recipe = recipeData.find(recipe => recipe.id === Number(recipeId));
   generateRecipeTitle(recipe, generateIngredients(recipe));
-  // console.log(generateIngredients(recipe));
   addRecipeImage(recipe);
   generateInstructions(recipe);
   fullRecipeInfo.insertAdjacentHTML("beforebegin", "<section id='overlay'></div>");
@@ -287,18 +281,17 @@ function openRecipeInfo(event) {
 function generateRecipeTitle(recipe, ingredients) {
   let recipeTitle = `
     <button id="exit-recipe-btn">X</button>
-    <h3 id="recipe-title">${recipe.name}</h3>
+    <h3 class="recipe-title" id=${recipe.id}>${recipe.name}</h3>
     <h4>Ingredients</h4>
     <p>${ingredients}</p>`
   fullRecipeInfo.insertAdjacentHTML("beforeend", recipeTitle);
 }
 
 function addRecipeImage(recipe) {
-  document.getElementById("recipe-title").style.backgroundImage = `url(${recipe.image})`;
+  document.getElementById(`${recipe.id}`).style.backgroundImage = `url(${recipe.image})`;
 }
 
 function generateIngredients(recipe) {
-  console.log(recipe)
   return recipe.ingredients.map(i => {
     let ingredient = ingredientsData.find(item => item.id === i.id)
     return `${capitalize(ingredient.name)} (${i.quantity.amount} ${i.quantity.unit})`
@@ -318,8 +311,6 @@ function generateInstructions(recipe) {
 }
 
 function exitRecipe() {
-  while (fullRecipeInfo.firstChild &&
-    fullRecipeInfo.removeChild(fullRecipeInfo.firstChild));
   fullRecipeInfo.style.display = "none";
   document.getElementById("overlay").remove();
 }
@@ -394,7 +385,10 @@ function findPantryInfo() {
     if (itemInfo && originalIngredient) {
       originalIngredient.count += item.amount;
     } else if (itemInfo) {
-      pantryInfo.push({name: itemInfo.name, count: item.amount});
+      pantryInfo.push({
+        name: itemInfo.name,
+        count: item.amount
+      });
     }
   });
   displayPantryInfo(pantryInfo.sort((a, b) => a.name.localeCompare(b.name)));
