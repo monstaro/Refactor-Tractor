@@ -8,7 +8,7 @@ let sampleRecipe = [
         "name": "all purpose flour",
         "id": 20081,
         "quantity": {
-          "amount": 500,
+          "amount": 1.5,
           "unit": "c"
         }
       },
