@@ -431,3 +431,6 @@ function findRecipesWithCheckedIngredients(selected) {
     }
   })
 }
+
+
+//For later use `You have ${item.amount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
