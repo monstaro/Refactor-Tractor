@@ -7,12 +7,17 @@ import Pantry from '../src/pantry.js';
 import Recipe from '../src/recipe.js';
 import sampleRecipeData from '../src/data/sample-recipe.js';
 
+import ingredientsData from '../src/data/ingredient-data.js'
+
+
 
 let pantry;
 let userInfo;
 let user;
 let recipeInfo;
 let sampleRecipe;
+let haveIngredientsRecipe;
+let pantryInfo;
 
 describe('Pantry', function() {
 
@@ -22,6 +27,7 @@ describe('Pantry', function() {
     pantry = new Pantry(userInfo);
     recipeInfo = new Recipe(recipeData[0]);
     sampleRecipe = new Recipe(sampleRecipeData[1])
+    haveIngredientsRecipe = new Recipe(sampleRecipeData[2])
   });
 
   it('should be a function', function() {
@@ -39,11 +45,29 @@ describe('Pantry', function() {
     expect(pantry.comparePantryToRecipe(sampleRecipe)).to.equal(true)
   })
   it('should tell the amount of ingredients still needed to cook a meal', () => {
+    pantry.determineIngredientQuantityNeeded(sampleRecipe)
+    expect(pantry.missingIngredients).to.deep.equal([{name: 'all purpose flour', missingAmount: 4996, id: 20081, unit: 'c'}])
+  })
+  it('IF the pantry has none of the ingredients it should tell the amount of ingredients still needed to cook a meal', () => {
 
- 
-
-    expect(pantry.determineIngredientQuantityNeeded(sampleRecipe)).to.equal("You have 16 c of all purpose flour, you need 5000 c to make this reicpe.")
-
-    expect(pantry.determineIngredientQuantityNeeded(recipeInfo)).to.equal('You have enough materials to make this recipe!')
+    pantry.determineIngredientQuantityNeeded(recipeInfo)
+    expect(pantry.missingIngredients).to.deep.equal([
+      {
+        "id": 1012047,
+        "missingAmount": 24,
+        "name": "sea salt",
+        "unit": "servings"
+      },
+      {
+        "id": 10019903,
+        "missingAmount": 2,
+        "name": "semisweet chocolate chips",
+        "unit": "c"
+      }
+    ])
+  })
+  it('should be able to have all the ingredients', () => {
+    pantry.determineIngredientQuantityNeeded(haveIngredientsRecipe)
+    expect(pantry.missingIngredients).to.deep.equal([])
   })
 });
