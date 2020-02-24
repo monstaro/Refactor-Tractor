@@ -35,7 +35,6 @@ describe('Cookbook', function () {
       cookbook.recipes[27],
       cookbook.recipes[48]
     ]);
-    console.log(cookbook.recipes[8].ingredients);
   });
 
 });
