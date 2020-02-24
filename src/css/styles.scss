@@ -5,6 +5,9 @@ $black: #000000;
 $white: #ffffff;
 $main-text: "Quicksand", sans-serif;
 $header-text: "Sulphur Point", sans-serif;
+$gradient-start: #fcf7f7;
+$gradient-end: #e1e1e1;
+
 
 @mixin msg-display() {
   width: 95%;
@@ -19,6 +22,11 @@ $header-text: "Sulphur Point", sans-serif;
 @mixin flex($display, $direction) {
   display: $display;
   flex-direction: $direction;
+}
+
+@mixin wandh($width, $height) {
+  width: $width;
+  height: $height;
 }
 
 * {
@@ -71,8 +79,7 @@ h4 {
 nav {
   @include flex(flex, row);
   grid-area: nav;
-  width: 100%;
-  height: 110px;
+  @include wandh(100%, 110px);
 }
 
 span {
@@ -82,8 +89,7 @@ span {
 
 .header-apple-icon {
   margin-left: 5px;
-  width: 35px;
-  height: 40px;
+  @include wandh(35px, 40px);
 }
 
 #search {
@@ -101,10 +107,9 @@ span {
   outline: none;
   box-shadow: inset -3px -1px 20px 1px $gray-blue;
   border-radius: 10px 0 0 10px;
-  background: -webkit-gradient(linear,left top, left bottom, color-stop(0, rgb(255, 255, 255)), color-stop(1, rgb(225,225,225)));
+  background: -webkit-gradient(linear,left top, left bottom, color-stop(0, $gradient-start), color-stop(1, $gradient-end));
   padding-right: 2%;
-  width: 100%;
-  height: 100%;
+  @include wandh(100%, 100%);
   color: $gray-blue;
   font-size: 2.625rem;
   text-align: right;
@@ -167,8 +172,7 @@ span {
 
   & img {
     padding: 2px 0;
-    width: 40px;
-    height: 40px;
+    @include wandh(40px, 40px);
   }
 }
 
@@ -182,10 +186,8 @@ span {
 /* BANNER IMAGE*/
 .banner-image {
   grid-area: image;
-  background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url("../images/green-apples.jpg");
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
+  background: linear-gradient(rgba(0,0,0,.5), rgba(50, 50, 50, 0.5)), url("../images/green-apples.jpg");
+  @include wandh(100%, 150px);
 }
 
 .my-recipes-banner {
@@ -251,8 +253,7 @@ main {
   border-radius: 7px;
   background-color: $white;
   padding: 15px;
-  width: 250px;
-  height: 270px;
+  @include wandh(250px, 270px);
 
   &:hover .card-photo-preview {
     opacity: 50%;
@@ -276,8 +277,7 @@ main {
 .unfilled-to-cook {
   cursor: pointer;
   padding-bottom: 10px;
-  width: 45px;
-  height: 50px;
+  @include wandh(45px, 50px);
 }
 
 .card-photo-preview {
@@ -286,8 +286,7 @@ main {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
-  width: 100%;
-  height: 130px;
+  @include wandh(100%, 130px);
 }
 
 .card-photo-container {
@@ -337,8 +336,7 @@ main {
 .show-all-btn {
   @extend .filter-btn;
   margin-top: 20px;
-  width: 200px;
-  height: 40px;
+  @include wandh(200px, 40px);
 }
 
 .recipe-card-buttons {
@@ -381,8 +379,7 @@ main {
   border-radius: 10px;
   background: $white;
   padding: 1%;
-  width: 70%;
-  height: 70%;
+  @include wandh(70%, 70%);
   overflow-x: scroll;
 
   & h4 {
@@ -436,6 +433,5 @@ main {
   z-index: 100;
   filter:alpha(opacity=50);
   background-color: $gray-blue;
-  width: 100%;
-  height: 100%;
+  @include wandh(100%, 100%);
 }
