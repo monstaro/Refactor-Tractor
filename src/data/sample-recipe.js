@@ -176,6 +176,21 @@ let sampleRecipe = [
       "antipasto",
       "hor d'oeuvre"
     ]
+  },
+  {
+    "name": "Loaded Chocolate Chip Pudding Cookie Cups",
+    "id": 595736,
+    "image": "https://spoonacular.com/recipeImages/595736-556x370.jpg",
+    "ingredients": [
+      {
+        "name": "all purpose flour",
+        "id": 20081,
+        "quantity": {
+          "amount": 4,
+          "unit": "c"
+        }
+      }
+    ]
   }
 ]
 

@@ -85,3 +85,4 @@ let pantryData = [
   }
 ]
 
+export default pantryData;
