@@ -8,11 +8,13 @@ class User {
   }
   saveRecipe(recipe) {
     this.favoriteRecipes.push(recipe);
+    //domUpdates >> display recipes from user.favorites
   }
 
   removeRecipe(recipe) {
     let i = this.favoriteRecipes.indexOf(recipe);
     this.favoriteRecipes.splice(i, 1);
+    
   }
 
   decideToCook(recipe) {
