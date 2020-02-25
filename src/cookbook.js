@@ -31,13 +31,12 @@ class Cookbook {
 
   filterRecipes(str) {
     return this.recipes.filter((recipe, index) => {
-      let recipeName = recipe.name;
-      let ingredients = recipe.ingredients;
-      let tags = recipe.tags;
-      if (recipeName.includes(str) || this.filterIngredients(ingredients, str) || this.filterTags(tags, str)) {
+      let recipeNameIncludes = recipe.name.includes(str);
+      let ingredientsIncludes = this.filterIngredients(recipe.ingredients, str);
+      let tagsIncludes = this.filterTags(recipe.tags, str);
+      if (recipeNameIncludes || ingredientsIncludes || tagsIncludes) {
         return recipe;
       }
-
     });
   }
 }
