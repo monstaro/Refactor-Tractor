@@ -45,35 +45,37 @@ Promise.all([users, ingredientsData, recipeData])
 
 
 
-let allRecipesBtn = document.querySelector(".show-all-btn");
-let filterBtn = document.querySelector(".filter-btn");
-let fullRecipeInfo = document.querySelector(".recipe-instructions");
-let main = document.querySelector("main");
+let allRecipesBtn = $(".show-all-btn");
+let filterBtn = $(".filter-btn");
+let fullRecipeInfo = $(".recipe-instructions");
+let main = document.querySelector("main"); 
+// ^^ doesn't work w jquery for some reason
 let menuOpen = false;
-let pantryBtn = document.querySelector(".my-pantry-btn");
+let pantryBtn = $(".my-pantry-btn");
 let pantryInfo = [];
 let recipes = [];
-let favedRecipesBtn = document.querySelector(".faved-recipes-btn");
+let favedRecipesBtn = $(".faved-recipes-btn");
 let recipesToCookBtn = $('.recipes-to-cook-btn')
-let searchBtn = document.querySelector(".search-btn");
-let searchForm = document.querySelector("#search");
-let searchInput = document.querySelector("#search-input");
-let showPantryRecipes = document.querySelector(".show-pantry-recipes-btn");
-let tagList = document.querySelector(".tag-list");
+let searchBtn = $(".search-btn");
+let searchForm = $("#search");
+let searchInput = $("#search-input");
+let showPantryRecipes = $(".show-pantry-recipes-btn");
+let tagList = $(".tag-list");
 let user;
 
 
 
 
-allRecipesBtn.addEventListener("click", showAllRecipes);
-filterBtn.addEventListener("click", findCheckedBoxes);
+allRecipesBtn.on("click", showAllRecipes);
+filterBtn.on("click", findCheckedBoxes);
 main.addEventListener("click", checkIcon);
-pantryBtn.addEventListener("click", toggleMenu);
-favedRecipesBtn.addEventListener("click", showFavedRecipes);
+pantryBtn.on("click", toggleMenu);
+favedRecipesBtn.on("click", showFavedRecipes);
 recipesToCookBtn.on('click', showRecipesToCook)
-searchBtn.addEventListener("click", searchRecipes);
-showPantryRecipes.addEventListener("click", findCheckedPantryBoxes);
-searchForm.addEventListener("submit", pressEnterSearch);
+searchBtn.on("click", searchRecipes);
+// ^^ unneccesary functionality?
+showPantryRecipes.on("click", findCheckedPantryBoxes);
+searchForm.on("keypress", pressKeySearch);
 
 
 
@@ -86,8 +88,7 @@ function generateUser() {
     <div class="welcome-msg">
       <h1>Welcome ${firstName}!</h1>
     </div>`;
-  document.querySelector(".banner-image").insertAdjacentHTML("afterbegin",
-    welcomeMsg);
+  $(".banner-image").append(welcomeMsg);
   findPantryInfo();
 }
 
@@ -146,7 +147,7 @@ function listTags(allTags) {
   allTags.forEach(tag => {
     let tagHtml = `<li><input type="checkbox" class="checked-tag" id="${tag}">
       <label for="${tag}">${capitalize(tag)}</label></li>`;
-    tagList.insertAdjacentHTML("beforeend", tagHtml);
+    tagList.prepend(tagHtml);
   });
 }
 
@@ -157,7 +158,7 @@ function capitalize(words) {
 }
 
 function findCheckedBoxes() {
-  let tagCheckboxes = document.querySelectorAll(".checked-tag");
+  let tagCheckboxes = $(".checked-tag");
   let checkboxInfo = Array.from(tagCheckboxes)
   let selectedTags = checkboxInfo.filter(box => {
     return box.checked;
@@ -192,7 +193,7 @@ function filterRecipes(filtered) {
 
 function hideUnselectedRecipes(foundRecipes) {
   foundRecipes.forEach(recipe => {
-    let domRecipe = document.getElementById(`${recipe.id}`);
+    let domRecipe = $(`${recipe.id}`);
     domRecipe.style.display = "none";
   });
 }
@@ -207,10 +208,11 @@ function checkIcon(e) {
     addToMyFavorites()
   }
   if (e.target.className === 'card-photo-container') {
-
     openRecipeInfo(event)
   }
 }
+
+// possible to refactor to jQuery?
 
 
 function addToMyFavorites() {
@@ -257,19 +259,18 @@ function showRecipesToCook() {
     let domRecipe = document.getElementById(`${recipe.id}`);
     domRecipe.style.display = "none";
   });
-  // showMyRecipesBanner();
+  showMyRecipesBanner();
 }
 
 // CREATE RECIPE INSTRUCTIONS
 function openRecipeInfo(event) {
-  fullRecipeInfo.style.display = "inline";
+  fullRecipeInfo.css('display', 'inline')
   let recipeId = event.path.find(e => e.id).id;
   let recipe = recipeData.find(recipe => recipe.id === Number(recipeId));
   generateRecipeTitle(recipe, generateIngredients(recipe));
   addRecipeImage(recipe);
   generateInstructions(recipe);
-  fullRecipeInfo.insertAdjacentHTML("beforebegin", "<section id='overlay'></div>");
-  document.querySelector('#exit-recipe-btn').addEventListener('click', exitRecipe)
+  $('#exit-recipe-btn').on('click', exitRecipe)
 }
 
 function generateRecipeTitle(recipe, ingredients) {
@@ -278,7 +279,7 @@ function generateRecipeTitle(recipe, ingredients) {
     <h3 class="recipe-title" id=${recipe.id}>${recipe.name}</h3>
     <h4>Ingredients</h4>
     <p>${ingredients}</p>`
-  fullRecipeInfo.insertAdjacentHTML("beforeend", recipeTitle);
+  fullRecipeInfo.append(recipeTitle);
 }
 
 function addRecipeImage(recipe) {
@@ -300,36 +301,34 @@ function generateInstructions(recipe) {
   instructions.forEach(i => {
     instructionsList += `<li>${i}</li>`
   });
-  fullRecipeInfo.insertAdjacentHTML("beforeend", "<h4>Instructions</h4>");
-  fullRecipeInfo.insertAdjacentHTML("beforeend", `<ol>${instructionsList}</ol>`);
+  fullRecipeInfo.append("<h4>Instructions</h4>");
+  fullRecipeInfo.append(`<ol>${instructionsList}</ol>`);
 }
 
 function exitRecipe() {
-  fullRecipeInfo.style.display = "none";
-  document.getElementById("overlay").remove();
+  fullRecipeInfo.css('display', 'none')
 }
 
 // TOGGLE DISPLAYS
 function showMyRecipesBanner() {
-  document.querySelector(".welcome-msg").style.display = "none";
-  document.querySelector(".my-recipes-banner").style.display = "block";
+  $(".welcome-msg").css("display", "none")
+  $(".my-recipes-banner").css('display', 'block')
 }
 
 function showWelcomeBanner() {
-  document.querySelector(".welcome-msg").style.display = "flex";
-  document.querySelector(".my-recipes-banner").style.display = "none";
+  $(".welcome-msg").css('display', "flex")
+  $(".my-recipes-banner").css('display', "none")
 }
 
 // SEARCH RECIPES
-function pressEnterSearch(event) {
-  event.preventDefault();
+function pressKeySearch() {
   searchRecipes();
 }
 
 function searchRecipes() {
   showAllRecipes();
   let searchedRecipes = recipeData.filter(recipe => {
-    return recipe.name.toLowerCase().includes(searchInput.value.toLowerCase());
+    return recipe.name.toLowerCase().includes(searchInput.val().toLowerCase());
   });
   filterNonSearched(createRecipeObject(searchedRecipes));
 }
@@ -348,12 +347,12 @@ function createRecipeObject(recipes) {
 }
 
 function toggleMenu() {
-  var menuDropdown = document.querySelector(".drop-menu");
+  var menuDropdown = $(".drop-menu");
   menuOpen = !menuOpen;
   if (menuOpen) {
-    menuDropdown.style.display = "block";
+    menuDropdown.css('display', 'none')
   } else {
-    menuDropdown.style.display = "none";
+    menuDropdown.css('display', 'block')
   }
 }
 
@@ -392,18 +391,19 @@ function displayPantryInfo(pantry) {
   pantry.forEach(ingredient => {
     let ingredientHtml = `<li><input type="checkbox" class="pantry-checkbox" id="${ingredient.name}">
       <label for="${ingredient.name}">${ingredient.name}, ${ingredient.count}</label></li>`;
-    document.querySelector(".pantry-list").insertAdjacentHTML("beforeend",
-      ingredientHtml);
+    $(".pantry-list").prepend(ingredientHtml);
   });
 }
 
 function findCheckedPantryBoxes() {
-  let pantryCheckboxes = document.querySelectorAll(".pantry-checkbox");
+  let pantryCheckboxes = $(".pantry-checkbox");
   let pantryCheckboxInfo = Array.from(pantryCheckboxes)
+    
   let selectedIngredients = pantryCheckboxInfo.filter(box => {
     return box.checked;
   })
   showAllRecipes();
+  // comment this invocation out? ^
   if (selectedIngredients.length > 0) {
     findRecipesWithCheckedIngredients(selectedIngredients);
   }
@@ -411,6 +411,10 @@ function findCheckedPantryBoxes() {
 
 function findRecipesWithCheckedIngredients(selected) {
   let recipeChecker = (arr, target) => target.every(v => arr.includes(v));
+
+  // let recipeChecker = (arr, target) => $(target).each(v => arr.contains(v));
+  // console.log(recipeChecker)
+  
   let ingredientNames = selected.map(item => {
     return item.id;
   })
@@ -425,6 +429,8 @@ function findRecipesWithCheckedIngredients(selected) {
     }
   })
 }
+
+// ^^ this function doesn't work for some reason
 
 
 //For later use `You have ${item.amount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
