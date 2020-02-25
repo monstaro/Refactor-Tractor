@@ -37,7 +37,6 @@ class Cookbook {
       if (recipeName.includes(str) || this.filterIngredients(ingredients, str) || this.filterTags(tags, str)) {
         return recipe;
       }
-
     });
   }
 }

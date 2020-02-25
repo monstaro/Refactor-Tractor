@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import User from './user';
+import Recipe from './recipe';
 import './css/base.scss';
 import './css/styles.scss';
 import './images/apple-logo.png'
@@ -42,8 +44,6 @@ Promise.all([users, ingredientsData, recipeData])
   .catch(err => err.message)
 
 
-import User from './user';
-import Recipe from './recipe';
 
 let allRecipesBtn = document.querySelector(".show-all-btn");
 let filterBtn = document.querySelector(".filter-btn");
@@ -65,12 +65,6 @@ let user;
 
 
 
-
-
-
-// window.addEventListener("load", createCards);
-// window.addEventListener("load", findTags);
-// window.addEventListener("load", generateUser);
 allRecipesBtn.addEventListener("click", showAllRecipes);
 filterBtn.addEventListener("click", findCheckedBoxes);
 main.addEventListener("click", checkIcon);
@@ -431,3 +425,6 @@ function findRecipesWithCheckedIngredients(selected) {
     }
   })
 }
+
+
+//For later use `You have ${item.amount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
