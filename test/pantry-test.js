@@ -1,4 +1,8 @@
-import { expect } from 'chai';
+
+const chai = require('chai');
+const expect = chai.expect
+const spies = require('chai-spies');
+chai.use(spies);
 
 import User from '../src/user.js';
 import userData from '../src/data/users-data.js';
@@ -6,7 +10,6 @@ import recipeData from '../src/data/recipe-data.js';
 import Pantry from '../src/pantry.js';
 import Recipe from '../src/recipe.js';
 import sampleRecipeData from '../src/data/sample-recipe.js';
-
 import ingredientsData from '../src/data/ingredient-data.js'
 
 
@@ -45,7 +48,13 @@ describe('Pantry', function() {
     expect(pantry.comparePantryToRecipe(sampleRecipe)).to.equal(false)
   })
   describe('Checking Ingredients Needed', function () {
-    
+    global.fetch = {}
+
+    chai.spy.on(fetch, ['fetch'], () => {})
+    chai.spy.on(fetch, ['then'], () => {})
+    chai.spy.on(fetch, ['catch'], () => {})
+
+
     it('should tell the amount of ingredients still needed to cook a meal', () => {
       sampleRecipe.identifyIngredients(ingredientsData);
 
@@ -80,7 +89,31 @@ describe('Pantry', function() {
       pantry.determineIngredientQuantityNeeded(haveIngredientsRecipe)
       expect(pantry.missingIngredients).to.deep.equal([])
     })
-
-  })
-  
+    it('should be able to determine the cost of missing ingredients', () => {
+      recipeInfo.identifyIngredients(ingredientsData);
+      pantry.determineIngredientQuantityNeeded(recipeInfo);
+      expect(pantry.calculateMissingIngredientCost()).to.equal(13178)
+    })
+    it('should be able to able to update the pantry', () => {
+      let url = 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData'
+      // console.log(pantry)
+      recipeInfo.identifyIngredients(ingredientsData);
+      pantry.determineIngredientQuantityNeeded(recipeInfo);
+      expect('')
+      pantry.addIngredientsToPantry() 
+      // expect(fetch).to.be.called(2);
+      
+      // expect(fetch).to.be.called.with(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     userId: user.id,
+      //     ingredientID: 1012047,
+      //     ingredientModification: 24
+      //   }),
+      // });
+    });
+  });
 });
