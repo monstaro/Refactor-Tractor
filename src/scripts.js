@@ -45,17 +45,18 @@ Promise.all([users, ingredientsData, recipeData])
 
 
 
-let allRecipesBtn = document.querySelector(".show-all-btn");
-let filterBtn = document.querySelector(".filter-btn");
-let fullRecipeInfo = document.querySelector(".recipe-instructions");
-let main = document.querySelector("main");
+let allRecipesBtn = $(".show-all-btn");
+let filterBtn = $(".filter-btn");
+let fullRecipeInfo = $(".recipe-instructions");
+let main = document.querySelector("main"); 
+// ^^ doesn't work w jquery for some reason
 let menuOpen = false;
-let pantryBtn = document.querySelector(".my-pantry-btn");
+let pantryBtn = $(".my-pantry-btn");
 let pantryInfo = [];
 let recipes = [];
-let favedRecipesBtn = document.querySelector(".faved-recipes-btn");
+let favedRecipesBtn = $(".faved-recipes-btn");
 let recipesToCookBtn = $('.recipes-to-cook-btn')
-let searchBtn = document.querySelector(".search-btn");
+let searchBtn = $(".search-btn");
 let searchForm = document.querySelector("#search");
 let searchInput = document.querySelector("#search-input");
 let showPantryRecipes = document.querySelector(".show-pantry-recipes-btn");
@@ -65,15 +66,15 @@ let user;
 
 
 
-allRecipesBtn.addEventListener("click", showAllRecipes);
-filterBtn.addEventListener("click", findCheckedBoxes);
+allRecipesBtn.on("click", showAllRecipes);
+filterBtn.on("click", findCheckedBoxes);
 main.addEventListener("click", checkIcon);
-pantryBtn.addEventListener("click", toggleMenu);
-favedRecipesBtn.addEventListener("click", showFavedRecipes);
+pantryBtn.on("click", toggleMenu);
+favedRecipesBtn.on("click", showFavedRecipes);
 recipesToCookBtn.on('click', showRecipesToCook)
-searchBtn.addEventListener("click", searchRecipes);
+searchBtn.on("keypress", searchRecipes);
 showPantryRecipes.addEventListener("click", findCheckedPantryBoxes);
-searchForm.addEventListener("submit", pressEnterSearch);
+searchForm.addEventListener("keypress", pressEnterSearch);
 
 
 
@@ -262,14 +263,13 @@ function showRecipesToCook() {
 
 // CREATE RECIPE INSTRUCTIONS
 function openRecipeInfo(event) {
-  fullRecipeInfo.style.display = "inline";
+  fullRecipeInfo.css('display', 'inline')
   let recipeId = event.path.find(e => e.id).id;
   let recipe = recipeData.find(recipe => recipe.id === Number(recipeId));
   generateRecipeTitle(recipe, generateIngredients(recipe));
   addRecipeImage(recipe);
   generateInstructions(recipe);
-  fullRecipeInfo.insertAdjacentHTML("beforebegin", "<section id='overlay'></div>");
-  document.querySelector('#exit-recipe-btn').addEventListener('click', exitRecipe)
+  $('#exit-recipe-btn').on('click', exitRecipe)
 }
 
 function generateRecipeTitle(recipe, ingredients) {
@@ -278,7 +278,7 @@ function generateRecipeTitle(recipe, ingredients) {
     <h3 class="recipe-title" id=${recipe.id}>${recipe.name}</h3>
     <h4>Ingredients</h4>
     <p>${ingredients}</p>`
-  fullRecipeInfo.insertAdjacentHTML("beforeend", recipeTitle);
+  fullRecipeInfo.append(recipeTitle);
 }
 
 function addRecipeImage(recipe) {
@@ -300,13 +300,12 @@ function generateInstructions(recipe) {
   instructions.forEach(i => {
     instructionsList += `<li>${i}</li>`
   });
-  fullRecipeInfo.insertAdjacentHTML("beforeend", "<h4>Instructions</h4>");
-  fullRecipeInfo.insertAdjacentHTML("beforeend", `<ol>${instructionsList}</ol>`);
+  fullRecipeInfo.append("<h4>Instructions</h4>");
+  fullRecipeInfo.append(`<ol>${instructionsList}</ol>`);
 }
 
 function exitRecipe() {
-  fullRecipeInfo.style.display = "none";
-  document.getElementById("overlay").remove();
+  fullRecipeInfo.css('display', 'none')
 }
 
 // TOGGLE DISPLAYS
@@ -322,11 +321,12 @@ function showWelcomeBanner() {
 
 // SEARCH RECIPES
 function pressEnterSearch(event) {
-  event.preventDefault();
+  // event.preventDefault();
   searchRecipes();
 }
 
 function searchRecipes() {
+  console.log('f')
   showAllRecipes();
   let searchedRecipes = recipeData.filter(recipe => {
     return recipe.name.toLowerCase().includes(searchInput.value.toLowerCase());
