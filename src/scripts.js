@@ -57,10 +57,10 @@ let recipes = [];
 let favedRecipesBtn = $(".faved-recipes-btn");
 let recipesToCookBtn = $('.recipes-to-cook-btn')
 let searchBtn = $(".search-btn");
-let searchForm = document.querySelector("#search");
-let searchInput = document.querySelector("#search-input");
-let showPantryRecipes = document.querySelector(".show-pantry-recipes-btn");
-let tagList = document.querySelector(".tag-list");
+let searchForm = $("#search");
+let searchInput = $("#search-input");
+let showPantryRecipes = $(".show-pantry-recipes-btn");
+let tagList = $(".tag-list");
 let user;
 
 
@@ -72,9 +72,10 @@ main.addEventListener("click", checkIcon);
 pantryBtn.on("click", toggleMenu);
 favedRecipesBtn.on("click", showFavedRecipes);
 recipesToCookBtn.on('click', showRecipesToCook)
-searchBtn.on("keypress", searchRecipes);
-showPantryRecipes.addEventListener("click", findCheckedPantryBoxes);
-searchForm.addEventListener("keypress", pressEnterSearch);
+searchBtn.on("click", searchRecipes);
+// ^^ unneccesary functionality?
+showPantryRecipes.on("click", findCheckedPantryBoxes);
+searchForm.on("keypress", pressKeySearch);
 
 
 
@@ -87,8 +88,7 @@ function generateUser() {
     <div class="welcome-msg">
       <h1>Welcome ${firstName}!</h1>
     </div>`;
-  document.querySelector(".banner-image").insertAdjacentHTML("afterbegin",
-    welcomeMsg);
+  $(".banner-image").append(welcomeMsg);
   findPantryInfo();
 }
 
@@ -147,7 +147,7 @@ function listTags(allTags) {
   allTags.forEach(tag => {
     let tagHtml = `<li><input type="checkbox" class="checked-tag" id="${tag}">
       <label for="${tag}">${capitalize(tag)}</label></li>`;
-    tagList.insertAdjacentHTML("beforeend", tagHtml);
+    tagList.prepend(tagHtml);
   });
 }
 
@@ -158,7 +158,7 @@ function capitalize(words) {
 }
 
 function findCheckedBoxes() {
-  let tagCheckboxes = document.querySelectorAll(".checked-tag");
+  let tagCheckboxes = $(".checked-tag");
   let checkboxInfo = Array.from(tagCheckboxes)
   let selectedTags = checkboxInfo.filter(box => {
     return box.checked;
@@ -193,7 +193,7 @@ function filterRecipes(filtered) {
 
 function hideUnselectedRecipes(foundRecipes) {
   foundRecipes.forEach(recipe => {
-    let domRecipe = document.getElementById(`${recipe.id}`);
+    let domRecipe = $(`${recipe.id}`);
     domRecipe.style.display = "none";
   });
 }
@@ -208,10 +208,11 @@ function checkIcon(e) {
     addToMyFavorites()
   }
   if (e.target.className === 'card-photo-container') {
-
     openRecipeInfo(event)
   }
 }
+
+// possible to refactor to jQuery?
 
 
 function addToMyFavorites() {
@@ -258,7 +259,7 @@ function showRecipesToCook() {
     let domRecipe = document.getElementById(`${recipe.id}`);
     domRecipe.style.display = "none";
   });
-  // showMyRecipesBanner();
+  showMyRecipesBanner();
 }
 
 // CREATE RECIPE INSTRUCTIONS
@@ -310,26 +311,24 @@ function exitRecipe() {
 
 // TOGGLE DISPLAYS
 function showMyRecipesBanner() {
-  document.querySelector(".welcome-msg").style.display = "none";
-  document.querySelector(".my-recipes-banner").style.display = "block";
+  $(".welcome-msg").css("display", "none")
+  $(".my-recipes-banner").css('display', 'block')
 }
 
 function showWelcomeBanner() {
-  document.querySelector(".welcome-msg").style.display = "flex";
-  document.querySelector(".my-recipes-banner").style.display = "none";
+  $(".welcome-msg").css('display', "flex")
+  $(".my-recipes-banner").css('display', "none")
 }
 
 // SEARCH RECIPES
-function pressEnterSearch(event) {
-  // event.preventDefault();
+function pressKeySearch() {
   searchRecipes();
 }
 
 function searchRecipes() {
-  console.log('f')
   showAllRecipes();
   let searchedRecipes = recipeData.filter(recipe => {
-    return recipe.name.toLowerCase().includes(searchInput.value.toLowerCase());
+    return recipe.name.toLowerCase().includes(searchInput.val().toLowerCase());
   });
   filterNonSearched(createRecipeObject(searchedRecipes));
 }
@@ -348,12 +347,12 @@ function createRecipeObject(recipes) {
 }
 
 function toggleMenu() {
-  var menuDropdown = document.querySelector(".drop-menu");
+  var menuDropdown = $(".drop-menu");
   menuOpen = !menuOpen;
   if (menuOpen) {
-    menuDropdown.style.display = "block";
+    menuDropdown.css('display', 'none')
   } else {
-    menuDropdown.style.display = "none";
+    menuDropdown.css('display', 'block')
   }
 }
 
@@ -392,18 +391,19 @@ function displayPantryInfo(pantry) {
   pantry.forEach(ingredient => {
     let ingredientHtml = `<li><input type="checkbox" class="pantry-checkbox" id="${ingredient.name}">
       <label for="${ingredient.name}">${ingredient.name}, ${ingredient.count}</label></li>`;
-    document.querySelector(".pantry-list").insertAdjacentHTML("beforeend",
-      ingredientHtml);
+    $(".pantry-list").prepend(ingredientHtml);
   });
 }
 
 function findCheckedPantryBoxes() {
-  let pantryCheckboxes = document.querySelectorAll(".pantry-checkbox");
+  let pantryCheckboxes = $(".pantry-checkbox");
   let pantryCheckboxInfo = Array.from(pantryCheckboxes)
+    
   let selectedIngredients = pantryCheckboxInfo.filter(box => {
     return box.checked;
   })
   showAllRecipes();
+  // comment this invocation out? ^
   if (selectedIngredients.length > 0) {
     findRecipesWithCheckedIngredients(selectedIngredients);
   }
@@ -411,6 +411,10 @@ function findCheckedPantryBoxes() {
 
 function findRecipesWithCheckedIngredients(selected) {
   let recipeChecker = (arr, target) => target.every(v => arr.includes(v));
+
+  // let recipeChecker = (arr, target) => $(target).each(v => arr.contains(v));
+  // console.log(recipeChecker)
+  
   let ingredientNames = selected.map(item => {
     return item.id;
   })
@@ -425,6 +429,8 @@ function findRecipesWithCheckedIngredients(selected) {
     }
   })
 }
+
+// ^^ this function doesn't work for some reason
 
 
 //For later use `You have ${item.amount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
