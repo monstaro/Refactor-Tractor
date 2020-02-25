@@ -6,51 +6,15 @@
 class Pantry {
   constructor(userInfo) {
     this.pantry = userInfo.pantry
+    this.id = userInfo.id
     this.missingIngredients = []
   }
   
   comparePantryToRecipe(recipe) {
-    // let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
-    //   allIngredients.push(ingredient.name)
-    //   return allIngredients
-    // }, []);
-    // let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
-    //   this.pantry.forEach(item => {
-    //     if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
-    //       ingredientsList.push(ingredient.name)
-    //     }
-    //   })
-    //   return ingredientsList
-    // }, [])
-    // if (recipeIngredients.length === matchingIngredients.length) {
-    //   return true
-    // } else {
-    //   return false;
-    // }   
     this.determineIngredientQuantityNeeded(recipe)
     return this.missingIngredients.length === 0;
   }
 
-  // findIngredientsNeeded(recipe) {
-  //   let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
-  //     allIngredients.push(ingredient.name)
-  //     return allIngredients
-  //   }, []);
-
-
-  //   let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
-  //     this.pantry.forEach(item => {
-  //       if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
-  //         ingredientsList.push(ingredient.name)
-  //       }
-  //     })
-  //     return ingredientsList
-  //   }, [])
-  //   return recipeIngredients.filter(ing => !matchingIngredients.includes(ing))
-  // }
-
-
-  
   determineIngredientQuantityNeeded(recipe) {
     recipe.ingredients.forEach(ingredient => {
       let currentIngredient = this.pantry.find(item => {
@@ -71,41 +35,44 @@ class Pantry {
             cost: ingredient.estimatedCostInCents
           })
       }
-
     })
   }
 
-  determineCostOfMissingIngredients(ingredients, recipe) {
+  calculateMissingIngredientCost() {
+    return this.missingIngredients.reduce((totalCost, curCost) => {
+      return totalCost += (curCost.cost * curCost.missingAmount)
+    }, 0)
+  }
 
-    let recipeIngredients = recipe.ingredients.reduce((allIngredients, ingredient) => {
-      allIngredients.push(ingredient.id)
-      return allIngredients
-    }, []);
-
-    let matchingIngredients = recipe.ingredients.reduce((ingredientsList, ingredient) => {
-      this.pantry.forEach(item => {
-        if (!ingredientsList.includes(ingredient.name) && item.ingredient === ingredient.id) {
-          ingredientsList.push(ingredient.id)
-        }
+  addIngredientsToPantry() {
+    this.missingIngredients.forEach(ingredient => {
+      fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: this.id,
+          ingredientID: ingredient.id,
+          ingredientModification: ingredient.missingAmount
+        }),
       })
-      return ingredientsList
-    }, [])
-
-
-
-
-    //  let findDiff = recipeIngredients.filter(ing => !matchingIngredients.includes(ing)) 
-    
-    let neededIngredients = recipe.ingredients.filter(ing => !matchingIngredients.includes(ing.id))
-
-    let a = neededIngredients.map(ingr => {
-      ingredients.forEach(ingredient => {
-        if (ingr.id === ingredient.id) {
-          return ingr.cost = ingredient.estimatedCostInCents * ingr.quantity.amount
-        }
+    .catch(err => console.log(err.message))
+      this.addPantryHelper(ingredient)
+    });
+  }
+  addPantryHelper(ingredient) {
+    let a = this.pantry.find(item =>
+      item.ingredient === ingredient.id
+    )
+    if (!a) {
+      return this.pantry.push({
+        ingredient: ingredient.id,
+        amount: 0
       })
-    })
-
+    }
+    let index = (!a) ? this.pantry.length - 1 : this.pantry.indexOf(a)
+    this.pantry[index].amount += ingredient.missingAmount
   }
 }
 
