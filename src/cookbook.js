@@ -9,7 +9,6 @@ class Cookbook {
     // console.log(this.allIngredients);
     return recipes.map(item => {
       let currentRecipe = new Recipe(item);
-      // console.log(currentRecipe);
       currentRecipe.identifyIngredients(this.allIngredients);
       return currentRecipe;
     });
@@ -30,11 +29,11 @@ class Cookbook {
   }
 
   filterRecipes(str) {
-    return this.recipes.filter((recipe, index) => {
-      let recipeName = recipe.name;
-      let ingredients = recipe.ingredients;
-      let tags = recipe.tags;
-      if (recipeName.includes(str) || this.filterIngredients(ingredients, str) || this.filterTags(tags, str)) {
+    return this.recipes.filter(recipe => {
+      let recipeNameIncludes = recipe.name.includes(str);
+      let ingredientsIncludes = this.filterIngredients(recipe.ingredients, str);
+      let tagsIncludes = this.filterTags(recipe.tags, str);
+      if (recipeNameIncludes || ingredientsIncludes || tagsIncludes) {
         return recipe;
       }
     });
