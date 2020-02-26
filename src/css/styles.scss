@@ -351,13 +351,27 @@ main {
   display: none;
   position: absolute;
   z-index: 3;
-  top: 98px;
+  top: 15.25%;
   right: 0;
   background-color: $white;
   padding: 12px;
   height: 30%;
   overflow: scroll;
   text-align: center;
+  border: solid $darker-green;
+  border-top: none;
+  border-radius: 50px 0 50px 0;
+
+  & li {
+    list-style: none;
+    width: 300px;
+  }
+
+  & li,
+  & li * {
+    margin: 0 3%;
+    cursor: pointer;
+  }
 
   & h2 {
     margin: 0;

@@ -58,7 +58,7 @@ let favedRecipesBtn = $(".faved-recipes-btn");
 let recipesToCookBtn = $('.recipes-to-cook-btn')
 let searchForm = $("#search");
 let searchInput = $("#search-input");
-let showPantryRecipes = $(".show-pantry-recipes-btn");
+let showPantryRecipes = $(".drop-menu");
 let tagList = $(".tag-list");
 let user;
 let cookbook;
@@ -356,35 +356,17 @@ function findCheckedPantryBoxes() {
   let selectedIngredients = pantryCheckboxInfo.filter(box => {
     return box.checked;
   })
+  let modifiedSelectedIngredients = selectedIngredients.map(item => {
+    return item.id;
+  })
+
   showAllRecipes();
-  // comment this invocation out? ^
-  if (selectedIngredients.length > 0) {
-    findRecipesWithCheckedIngredients(selectedIngredients);
+  if (modifiedSelectedIngredients.length > 0) {
+    let recipesIngred = cookbook.filterRecipes('!!!', modifiedSelectedIngredients);
+    createCards(recipesIngred)
   }
 }
 
-function findRecipesWithCheckedIngredients(selected) {
-  let recipeChecker = (arr, target) => target.every(v => arr.includes(v));
-
-  // let recipeChecker = (arr, target) => $(target).each(v => arr.contains(v));
-  // console.log(recipeChecker)
-
-  let ingredientNames = selected.map(item => {
-    return item.id;
-  })
-  cookbook.recipes.forEach(recipe => {
-    let allRecipeIngredients = [];
-    recipe.ingredients.forEach(ingredient => {
-      allRecipeIngredients.push(ingredient.name);
-    });
-    if (!recipeChecker(allRecipeIngredients, ingredientNames)) {
-      let domRecipe = document.getElementById(`${recipe.id}`);
-      domRecipe.style.display = "none";
-    }
-  })
-}
-
-// ^^ this function doesn't work for some reason
 
 
 //For later use `You have ${item.amount} ${unit} of ${ingredientName}, you need ${requiredAmount} ${ingredient.quantity.unit} to make this reicpe.`
