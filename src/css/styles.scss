@@ -386,6 +386,13 @@ main {
     margin: 0;
     color: $darker-green;
   }
+
+  & button {
+    background-color: $bright-green;
+    width: 40%;
+    height: 10%;
+    border-radius: 50px;
+  }
 }
 
 .pantry-list {

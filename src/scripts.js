@@ -51,6 +51,7 @@ Promise.all([users, ingredientsData, recipeData])
 
 let fullRecipeInfo = $(".recipe-instructions");
 let main = $("main");
+let menuVeiwAllBtn = $('#veiw-all-btn');
 let menuOpen = false;
 let pantryBtn = $(".my-pantry-btn");
 let pantryInfo = [];
@@ -67,7 +68,7 @@ let user;
 let cookbook;
 
 
-
+menuVeiwAllBtn.on('click', veiwAll)
 pages.on('click', showSelected)
 homeBtn.on("click", showAllRecipes);
 tagList.on("click", findCheckedBoxes);
@@ -321,6 +322,11 @@ function toggleMenu() {
   } else {
     menuDropdown.css('display', 'block')
   }
+}
+
+function veiwAll() {
+  var menuDropdown = $(".drop-menu");
+  menuDropdown.css('height', 'fit-content')
 }
 
 function showAllRecipes() {
