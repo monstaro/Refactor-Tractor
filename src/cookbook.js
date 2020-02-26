@@ -18,9 +18,13 @@ class Cookbook {
     return this.recipes.find(recipe => recipe.id === id);
   }
 
-  filterTags(tags, str) {
-    let found = tags.filter(tag => tag.toLowerCase().includes(str.toLowerCase()));
+  filterTags(tags, arr) {
+    let found = []
+    let foundPerWord = arr.forEach(word => {
+      found = found.concat(tags.filter(tag => tag.toLowerCase().includes(word.toLowerCase())));
+    });
     return found.length > 0;
+
   }
 
   filterIngredients(ingredients, str) {
@@ -28,11 +32,11 @@ class Cookbook {
     return found.length > 0;
   }
 
-  filterRecipes(str) {
+  filterRecipes(str, arr) {
     return this.recipes.filter(recipe => {
       let recipeNameIncludes = recipe.name.toLowerCase().includes(str.toLowerCase());
       let ingredientsIncludes = this.filterIngredients(recipe.ingredients, str);
-      let tagsIncludes = this.filterTags(recipe.tags, str);
+      let tagsIncludes = this.filterTags(recipe.tags, arr);
       if (recipeNameIncludes || ingredientsIncludes || tagsIncludes) {
         return recipe;
       }

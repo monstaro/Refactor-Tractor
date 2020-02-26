@@ -101,9 +101,9 @@ function createCookbook() {
 }
 
 // CREATE RECIPE CARDS
-function createCards(recipies) {
+function createCards(recipes) {
   main.empty()
-  recipies.forEach(recipe => {
+  recipes.forEach(recipe => {
     let shortRecipeName = recipe.name;
     if (recipe.name.length > 40) {
       shortRecipeName = recipe.name.substring(0, 40) + "...";
@@ -141,7 +141,7 @@ function addToDom(recipeInfo, shortRecipeName) {
 // FILTER BY RECIPE TAGS
 function findTags() {
   let tags = [];
-  recipeData.forEach(recipe => {
+  cookbook.recipes.forEach(recipe => {
     recipe.tags.forEach(tag => {
       if (!tags.includes(tag)) {
         tags.push(tag);
@@ -156,7 +156,7 @@ function listTags(allTags) {
   allTags.forEach(tag => {
     let tagHtml = `<li><input type="checkbox" class="checked-tag" id="${tag}">
       <label for="${tag}">${capitalize(tag)}</label></li>`;
-    tagList.prepend(tagHtml);
+    tagList.append(tagHtml);
   });
 }
 
@@ -172,22 +172,12 @@ function findCheckedBoxes() {
   let selectedTags = checkboxInfo.filter(box => {
     return box.checked;
   })
-  findTaggedRecipes(selectedTags);
+  let editedSelectedTags = selectedTags.map(tag => tag.id);
+  findTaggedRecipes(editedSelectedTags);
 }
 
 function findTaggedRecipes(selected) {
-  createCards(cookbook.recipes)
-  let filteredResults = [];
-  selected.forEach(tag => {
-    let allRecipes = cookbook.recipes.filter(recipe => {
-      return recipe.tags.includes(tag.id);
-    });
-    allRecipes.forEach(recipe => {
-      if (!filteredResults.includes(recipe)) {
-        filteredResults.push(recipe);
-      }
-    })
-  });
+  let filteredResults = cookbook.filterRecipes('!!!', selected)
   if (filteredResults.length > 0) {
     createCards(filteredResults);
   }
@@ -309,7 +299,7 @@ function showWelcomeBanner() {
 // SEARCH RECIPES
 
 function searchRecipes() {
-  createCards(cookbook.filterRecipes(searchInput.val()))
+  createCards(cookbook.filterRecipes(searchInput.val(), []))
 }
 
 
