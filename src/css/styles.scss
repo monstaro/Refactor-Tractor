@@ -164,8 +164,18 @@ span {
     padding: 2px 0;
     width: 40px;
     height: 40px;
+    pointer-events: none;
+  }
+
+  & p {
+    pointer-events: none;
   }
 }
+
+.selected p {
+  @extend .nav-btn:hover;
+}
+
 .search-btn {
   border-left: 3px outset $bright-green;
   border-radius: 0 15px 15px 0;
@@ -190,7 +200,6 @@ span {
 }
 
 .my-recipes-banner {
-  display: none;
   margin-top: 25px;
   @include msg-display();
   & h1 {
