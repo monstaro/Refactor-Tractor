@@ -136,12 +136,6 @@ span {
   display: none;
 }
 
-.search-btn {
-  border-left: 3px outset $bright-green;
-  border-radius: 0 15px 15px 0;
-  padding: 1%;
-}
-
 .faved-recipes-btn {
   color: $white;
 }
@@ -171,6 +165,12 @@ span {
     width: 40px;
     height: 40px;
   }
+}
+.search-btn {
+  border-left: 3px outset $bright-green;
+  border-radius: 0 15px 15px 0;
+  padding: 1%;
+  cursor: initial;
 }
 
 .saved-ingredients-btn {

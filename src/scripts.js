@@ -49,7 +49,6 @@ Promise.all([users, ingredientsData, recipeData])
 
 
 let allRecipesBtn = $(".show-all-btn");
-let filterBtn = $(".filter-btn");
 let fullRecipeInfo = $(".recipe-instructions");
 let main = $("main");
 let menuOpen = false;
@@ -57,7 +56,6 @@ let pantryBtn = $(".my-pantry-btn");
 let pantryInfo = [];
 let favedRecipesBtn = $(".faved-recipes-btn");
 let recipesToCookBtn = $('.recipes-to-cook-btn')
-let searchBtn = $(".search-btn");
 let searchForm = $("#search");
 let searchInput = $("#search-input");
 let showPantryRecipes = $(".show-pantry-recipes-btn");
@@ -69,7 +67,7 @@ let cookbook;
 
 
 allRecipesBtn.on("click", showAllRecipes);
-filterBtn.on("click", findCheckedBoxes);
+tagList.on("click", findCheckedBoxes);
 main.on("click", checkIcon);
 pantryBtn.on("click", toggleMenu);
 favedRecipesBtn.on("click", showFavedRecipes);
@@ -177,10 +175,12 @@ function findCheckedBoxes() {
 }
 
 function findTaggedRecipes(selected) {
+  showAllRecipes()
   let filteredResults = cookbook.filterRecipes('!!!', selected)
   if (filteredResults.length > 0) {
     createCards(filteredResults);
   }
+
 }
 
 // FAVORITE RECIPE FUNCTIONALITY
