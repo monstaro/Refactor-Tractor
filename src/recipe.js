@@ -6,6 +6,8 @@ class Recipe {
     this.tags = recipe.tags;
     this.ingredients = recipe.ingredients;
     this.instructions = recipe.instructions;
+    this.favorite = false;
+    this.toCook = false;
   }
 
   identifyIngredients(ingredients) {

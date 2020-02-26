@@ -30,7 +30,7 @@ class Cookbook {
 
   filterRecipes(str) {
     return this.recipes.filter(recipe => {
-      let recipeNameIncludes = recipe.name.includes(str);
+      let recipeNameIncludes = recipe.name.toLowerCase().includes(str.toLowerCase());
       let ingredientsIncludes = this.filterIngredients(recipe.ingredients, str);
       let tagsIncludes = this.filterTags(recipe.tags, str);
       if (recipeNameIncludes || ingredientsIncludes || tagsIncludes) {

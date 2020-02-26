@@ -8,22 +8,24 @@ class User {
   }
   saveRecipe(recipe) {
     this.favoriteRecipes.push(recipe);
-    //domUpdates >> display recipes from user.favorites
+    recipe.favorite = true
   }
 
   removeRecipe(recipe) {
-    let i = this.favoriteRecipes.indexOf(recipe);
-    this.favoriteRecipes.splice(i, 1);
-    
+      let i = this.favoriteRecipes.indexOf(recipe);
+      this.favoriteRecipes.splice(i, 1);
+      recipe.favorite = false
   }
 
   decideToCook(recipe) {
     this.recipesToCook.push(recipe);
+    recipe.toCook = true;
   }
 
   decideNotToCook(recipe) {
     let i = this.recipesToCook.indexOf(recipe);
     this.recipesToCook.splice(i, 1);
+    recipe.toCook = true;
   }
 
   filterRecipes(type) {
