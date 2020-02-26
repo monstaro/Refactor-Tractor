@@ -9,7 +9,7 @@ class Pantry {
     this.id = userInfo.id
     this.missingIngredients = []
   }
-  
+
   comparePantryToRecipe(recipe) {
     this.determineIngredientQuantityNeeded(recipe)
     return this.missingIngredients.length === 0;
@@ -22,13 +22,13 @@ class Pantry {
       })
       let requiredAmount;
       if (currentIngredient) {
-        requiredAmount = ingredient.quantity.amount - currentIngredient.amount 
+        requiredAmount = ingredient.quantity.amount - currentIngredient.amount
       } else {
-        requiredAmount = ingredient.quantity.amount 
+        requiredAmount = ingredient.quantity.amount
       }
       if (requiredAmount > 0) {
         this.missingIngredients
-          .push({name: ingredient.name, 
+          .push({name: ingredient.name,
             missingAmount: requiredAmount,
             id: ingredient.id,
             unit: ingredient.quantity.unit,
@@ -61,6 +61,7 @@ class Pantry {
       this.addPantryHelper(ingredient)
     });
   }
+
   addPantryHelper(ingredient) {
     let a = this.pantry.find(item =>
       item.ingredient === ingredient.id
@@ -73,6 +74,45 @@ class Pantry {
     }
     let index = (!a) ? this.pantry.length - 1 : this.pantry.indexOf(a)
     this.pantry[index].amount += ingredient.missingAmount
+  }
+
+  removeIngredientsFromPantry(recipe) {
+    let ingredientsToModify = []
+    recipe.ingredients.forEach(ingredient => {
+      let currentIngredient = his.pantry
+        .find(item => item.ingredient === ingredient.id)
+      if (currentIngredient) {
+        ingredientsToModify.push(ingredient)
+      }
+    });
+    return (ingredientsToModify.length === recipe.ingredients.length) ?
+    this.removeAPIHelper(ingredientsToModify) : 'You do not have the ingredients to make this';
+  }
+
+  removeAPIHelper(ingredients) {
+    ingredients.forEach(ingredient => {
+      fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: this.id,
+          ingredientID: ingredient.id,
+          ingredientModification: (-ingredient.quantity.amount)
+        }),
+      })
+      .catch(err => console.log(err.message))
+    });
+    this.removefromPantryHelper(ingredients)
+    return 'YUMMMM!!!!!'
+  }
+
+  removefromPantryHelper(ingredients) {
+    ingredients.forEach(ingredient => {
+      let index = this.pantry.indexOf(ingredient)
+      this.pantry[index].amount -= ingredient.quantity.amount
+    });
   }
 }
 
