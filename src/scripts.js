@@ -9,11 +9,12 @@ import './images/apple-logo.png'
 import './images/apple-logo-outline.png'
 import './images/heart.svg'
 import './images/heart-full.svg'
-import './images/cookbook.png'
 import './images/seasoning.png'
 import './images/search.png'
 import './images/chef.svg'
 import './images/chef-filled.svg'
+import './images/001-recipe.svg'
+import './images/002-recipe-1.svg'
 
 
 
@@ -48,7 +49,6 @@ Promise.all([users, ingredientsData, recipeData])
 
 
 
-let allRecipesBtn = $(".show-all-btn");
 let fullRecipeInfo = $(".recipe-instructions");
 let main = $("main");
 let menuOpen = false;
@@ -60,13 +60,16 @@ let searchForm = $("#search");
 let searchInput = $("#search-input");
 let showPantryRecipes = $(".show-pantry-recipes-btn");
 let tagList = $(".tag-list");
+let homeBtn = $('.all-recipes-btn')
+let pages = $('.page')
+let banner = $("#banner");
 let user;
 let cookbook;
 
 
 
-
-allRecipesBtn.on("click", showAllRecipes);
+pages.on('click', showSelected)
+homeBtn.on("click", showAllRecipes);
 tagList.on("click", findCheckedBoxes);
 main.on("click", checkIcon);
 pantryBtn.on("click", toggleMenu);
@@ -83,13 +86,8 @@ searchForm.on("input", searchRecipes);
 // GENERATE A USER ON LOAD
 function generateUser() {
   user = new User(users[Math.floor(Math.random() * users.length)]);
-  let firstName = user.name.split(" ")[0];
-  let welcomeMsg = `
-    <div class="welcome-msg">
-      <h1>Welcome ${firstName}!</h1>
-    </div>`;
-  $(".banner-image").append(welcomeMsg);
   findPantryInfo();
+  showWelcomeBanner();
 }
 
 // GENERATE A COOKBOOK ON LOAD
@@ -136,6 +134,16 @@ function addToDom(recipeInfo, shortRecipeName) {
   main.prepend( cardHtml);
 }
 
+// Show Page selected
+
+function showSelected() {
+  pages.removeClass('selected')
+  event.target.classList.add('selected')
+  if (event.target.classList.contains('all-recipes-btn')) {
+    showWelcomeBanner()
+  }
+}
+
 // FILTER BY RECIPE TAGS
 function findTags() {
   let tags = [];
@@ -180,7 +188,6 @@ function findTaggedRecipes(selected) {
   if (filteredResults.length > 0) {
     createCards(filteredResults);
   }
-
 }
 
 // FAVORITE RECIPE FUNCTIONALITY
@@ -228,13 +235,13 @@ function addToRecipesToCook() {
 
 function showFavedRecipes() {
   createCards(user.favoriteRecipes)
-  showMyRecipesBanner();
+  showFavedRecipesBanner()
 }
 
 
 function showRecipesToCook() {
   createCards(user.recipesToCook)
-  showMyRecipesBanner();
+  showToCookBanner()
 }
 
 // CREATE RECIPE INSTRUCTIONS
@@ -286,14 +293,17 @@ function exitRecipe() {
 }
 
 // TOGGLE DISPLAYS
-function showMyRecipesBanner() {
-  $(".welcome-msg").css("display", "none")
-  $(".my-recipes-banner").css('display', 'block')
+function showFavedRecipesBanner() {
+  banner.text('My Favorites')
 }
 
 function showWelcomeBanner() {
-  $(".welcome-msg").css('display', "flex")
-  $(".my-recipes-banner").css('display', "none")
+  let firstName = user.name.split(" ")[0];
+  banner.text(`Welcome ${firstName}!`)
+}
+
+function showToCookBanner() {
+  banner.text('My To Cook')
 }
 
 // SEARCH RECIPES
@@ -315,7 +325,6 @@ function toggleMenu() {
 
 function showAllRecipes() {
   createCards(cookbook.recipes)
-  showWelcomeBanner();
 }
 
 // CREATE AND USE PANTRY
