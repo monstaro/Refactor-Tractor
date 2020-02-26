@@ -2,7 +2,7 @@
 
 ## A refactoring project that utilises SASS, jQuery, Fetch API, & Mocha/Chai Testing.
 
-This project contains contributions my Kyle Barnett, Cody Smith, and John Watterson as part of a project at Turing School of Software and Design.
+This project contains contributions by Kyle Barnett, Cody Smith, and John Watterson as part of a project at Turing School of Software and Design.
 
 ## Installation
 
